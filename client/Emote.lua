@@ -475,7 +475,7 @@ function DestroyAllProps()
     DebugPrint("Destroyed Props")
 end
 
-function AddPropToPlayer(prop1, bone, off1, off2, off3, rot1, rot2, rot3, textureVariation, iscollision)
+function AddPropToPlayer(prop1, bone, off1, off2, off3, rot1, rot2, rot3, textureVariation, PropCollision)
     local Player = PlayerPedId()
     local x, y, z = table.unpack(GetEntityCoords(Player))
 
@@ -487,7 +487,7 @@ function AddPropToPlayer(prop1, bone, off1, off2, off3, rot1, rot2, rot3, textur
     if textureVariation ~= nil then
         SetObjectTextureVariation(prop, textureVariation)
     end
-    AttachEntityToEntity(prop, Player, GetPedBoneIndex(Player, bone), off1, off2, off3, rot1, rot2, rot3, true, iscollision, false, true, 1, true)
+    AttachEntityToEntity(prop, Player, GetPedBoneIndex(Player, bone), off1, off2, off3, rot1, rot2, rot3, true, PropCollision, false, true, 1, true)
     table.insert(PlayerProps, prop)
     PlayerHasProp = true
     SetModelAsNoLongerNeeded(prop1)
@@ -659,18 +659,18 @@ function OnEmotePlay(EmoteName, textureVariation)
             PropName = EmoteName.AnimationOptions.Prop
             PropBone = EmoteName.AnimationOptions.PropBone
 	    if EmoteName.AnimationOptions.PropCollision == false then
-		iscollision = false
+		PropCollision = false
             else
-		iscollision = true
+		PropCollision = true
             end
             PropPl1, PropPl2, PropPl3, PropPl4, PropPl5, PropPl6 = table.unpack(EmoteName.AnimationOptions.PropPlacement)
             if EmoteName.AnimationOptions.SecondProp then
                 SecondPropName = EmoteName.AnimationOptions.SecondProp
                 SecondPropBone = EmoteName.AnimationOptions.SecondPropBone
 		if EmoteName.AnimationOptions.SecondPropCollision == false then
-			issecondcollision = false
+			SecondPropCollision = false
 		else
-			issecondcollision = true
+			SecondPropCollision = true
            	end		
                 SecondPropPl1, SecondPropPl2, SecondPropPl3, SecondPropPl4, SecondPropPl5, SecondPropPl6 = table.unpack(EmoteName
                     .AnimationOptions.SecondPropPlacement)
@@ -679,10 +679,10 @@ function OnEmotePlay(EmoteName, textureVariation)
                 SecondPropEmote = false
             end
             Wait(AttachWait)
-            if not AddPropToPlayer(PropName, PropBone, PropPl1, PropPl2, PropPl3, PropPl4, PropPl5, PropPl6, textureVariation, iscollision) then return end
+            if not AddPropToPlayer(PropName, PropBone, PropPl1, PropPl2, PropPl3, PropPl4, PropPl5, PropPl6, textureVariation, PropCollision) then return end
             if SecondPropEmote then
                 if not AddPropToPlayer(SecondPropName, SecondPropBone, SecondPropPl1, SecondPropPl2, SecondPropPl3,
-                    SecondPropPl4, SecondPropPl5, SecondPropPl6, textureVariation, issecondcollision) then 
+                    SecondPropPl4, SecondPropPl5, SecondPropPl6, textureVariation, SecondPropCollision) then 
                     DestroyAllProps()
                     return 
                 end
